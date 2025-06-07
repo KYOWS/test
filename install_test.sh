@@ -76,10 +76,9 @@ show_animated_logo() {
 # Função para mostrar um banner colorido
 function show_banner() {
     echo -e "${GREEN}██████████████████████████████████████████████████████████████████████████████"
-    echo -e "█                                                                            █"
-    echo -e "█                 ${YELLOW}Preencha as informações solicitadas abaixo${GREEN}                 █"
-    echo -e "█              (Este é um script de TESTE - NADA será instalado)             █"
-    echo -e "█                                                                            █"
+    echo -e "██                                                                          ██"
+    echo -e "██                ${YELLOW}Preencha as informações solicitadas abaixo${GREEN}                ██"
+    echo -e "██                                                                          ██"
     echo -e "██████████████████████████████████████████████████████████████████████████████${NC}"
 }
 
@@ -93,7 +92,7 @@ function show_step() {
     echo -ne "${GREEN}Passo ${YELLOW}$current/$total ${GREEN}["
     for ((i=0; i<50; i++)); do
         if [ $i -lt $completed ]; then
-            echo -ne "█"
+            echo -ne "●"
         else
             echo -ne " "
         fi
