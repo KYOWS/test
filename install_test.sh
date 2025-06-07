@@ -116,7 +116,7 @@ validate_email() {
 validate_domain() {
     # Exige formato 'subdominio.dominio.tld' ou 'subdominio.dominio.tld.tld_nacional'
     # Ex: traefik.seudominio.com OU traefik.seudominio.com.br
-    local domain_regex="^[a-zA-Z0-9._%+-]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
+    local domain_regex="^[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
     
     # Explicação desta nova regex:
     # ^: Início da string.
