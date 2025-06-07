@@ -114,8 +114,18 @@ validate_email() {
 
 # Função para validar domínio (formato básico)
 validate_domain() {
-    local domain_regex="^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$"
-    if [[ $1 =~ $domain_regex ]]; then
+    # Permite TLDs com múltiplos componentes (ex: .com.br) e mais de 2 caracteres
+    local domain_regex="^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})*$"
+    # Explicação do regex:
+    # ^: Início da string.
+    # ([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+: Permite um ou mais subdomínios/partes do domínio,
+    #                                                    com hífens no meio, mas não no início/fim.
+    # [a-zA-Z]{2,}: Permite o primeiro componente do TLD com 2 ou mais letras (ex: .com, .fr, .io).
+    # (?:\\.[a-zA-Z]{2,})*: Permite zero ou mais componentes adicionais do TLD (ex: .br, .uk),
+    #                        para domínios como .com.br ou .co.uk. O `?:` evita a criação de grupo de captura.
+    # $: Fim da string.
+
+    if [[ "$1" =~ $domain_regex ]]; then # Use aspas duplas em "$1" para garantir que a variável seja tratada como uma única string.
         return 0 # Válido
     else
         return 1 # Inválido
