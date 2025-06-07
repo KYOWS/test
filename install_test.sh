@@ -112,20 +112,26 @@ validate_email() {
     fi
 }
 
-# Função para validar domínio (formato básico)
+# Função para validar domínio (formato específico)
 validate_domain() {
-    # Permite TLDs com múltiplos componentes (ex: .com.br) e mais de 2 caracteres
-    local domain_regex="^([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})*$"
-    # Explicação do regex:
+    # Exige formato 'subdominio.dominio.tld' ou 'subdominio.dominio.tld.tld_nacional'
+    # Ex: traefik.seudominio.com OU traefik.seudominio.com.br
+    local domain_regex="^([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z0-9]{2,}\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$"
+    
+    # Explicação do regex para o seu caso específico:
     # ^: Início da string.
-    # ([a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+: Permite um ou mais subdomínios/partes do domínio,
-    #                                                    com hífens no meio, mas não no início/fim.
-    # [a-zA-Z]{2,}: Permite o primeiro componente do TLD com 2 ou mais letras (ex: .com, .fr, .io).
-    # (?:\\.[a-zA-Z]{2,})*: Permite zero ou mais componentes adicionais do TLD (ex: .br, .uk),
-    #                        para domínios como .com.br ou .co.uk. O `?:` evita a criação de grupo de captura.
+    # ([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+:
+    #    - Garante que haja pelo menos uma ou mais "partes" de domínio, como `traefik.` ou `seudominio.`.
+    #    - `[a-zA-Z0-9]`: Começa com letra ou número.
+    #    - `(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?`: Permite hífens no meio da parte, mas não no início/fim,
+    #                                            e no máximo 61 caracteres por parte (label).
+    #    - `\.`: Seguido por um ponto.
+    # [a-zA-Z0-9]{2,}\.: Esta é a chave! Exige o "domínio" (ex: seudominio) com 2+ caracteres, seguido de um ponto.
+    # [a-zA-Z]{2,}: Exige o primeiro TLD (ex: com, org, net) com 2+ letras.
+    # (?:\.[a-zA-Z]{2,})?$: Opcionalmente permite um segundo TLD (ex: .br, .uk) para domínios compostos.
     # $: Fim da string.
 
-    if [[ "$1" =~ $domain_regex ]]; then # Use aspas duplas em "$1" para garantir que a variável seja tratada como uma única string.
+    if [[ "$1" =~ $domain_regex ]]; then
         return 0 # Válido
     else
         return 1 # Inválido
