@@ -77,8 +77,8 @@ show_animated_logo() {
 function show_banner() {
     echo -e "${GREEN}=============================================================================="
     echo -e "=                                                                            ="
-    echo -e "=              ${YELLOW}Preencha as informações solicitadas abaixo${GREEN}              ="
-    echo -e "=                 (Este é um script de TESTE - NADA será instalado)        ="
+    echo -e "=        ${YELLOW}Preencha as informações solicitadas abaixo${GREEN}         ="
+    echo -e "=              (Este é um script de TESTE - NADA será instalado)             ="
     echo -e "=                                                                            ="
     echo -e "==============================================================================${NC}"
 }
