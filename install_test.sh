@@ -215,13 +215,13 @@ echo ""
 
 show_step 5
 while true; do
-    read -p "🌐 Dominio do Edge (ex: edge.seudominio.com): " edge_domain
-    if validate_domain "<span class="math-inline">edge\_domain"; then
-echo \-e "</span>{GREEN}✅ Domínio válido.<span class="math-inline">\{NC\}"
-break
-else
-echo \-e "</span>{RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
-    fi # <--- Esta linha estava faltando ou incorreta
+    read -p "🌐  Dominio do Edge (ex: edge.seudominio.com): " edge_domain
+    if validate_domain "$portainer_domain"; then
+        echo -e "${GREEN}✅ Domínio válido.${NC}"
+        break
+    else
+        echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
+    fi
 done
 echo ""
 
