@@ -244,7 +244,7 @@ echo -e "${BLUE}📋 Resumo das Informações${NC}"
 echo -e "${GREEN}================================${NC}"
 echo -e "📧 Seu E-mail: ${YELLOW}$email${NC}"
 echo -e "🌐 Dominio do Traefik: ${YELLOW}$traefik_domain${NC}"
-echo -e "🔑 Senha do Traefik: ${YELLOW}******** (hash gerado simulado)$TRAEFIK_PASSWORD_HASH${NC}" # Apenas para visualização
+echo -e "🔑 Senha do Traefik: ${YELLOW}******** (hash gerado simulado)${NC}" # Apenas para visualização
 echo -e "🌐 Dominio do Portainer: ${YELLOW}$portainer_domain${NC}"
 echo -e "🌐 Dominio do Edge: ${YELLOW}$edge_domain${NC}"
 echo -e "${GREEN}================================${NC}"
