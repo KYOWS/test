@@ -216,7 +216,7 @@ echo ""
 show_step 5
 while true; do
     read -p "🌐  Dominio do Edge (ex: edge.seudominio.com): " edge_domain
-    if validate_domain "$portainer_domain"; then
+    if validate_domain "$edge_domain"; then
         echo -e "${GREEN}✅ Domínio válido.${NC}"
         break
     else
