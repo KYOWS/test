@@ -207,7 +207,7 @@ while true; do
     echo "" # Quebra de linha após a entrada da senha oculta
     if validate_password_complexity "$traefik_senha"; then
         # Gerar hash da senha para maior segurança no docker-compose.yml (simulado)
-        TRAEFIK_PASSWORD_HASH=$(htpasswd -B -nb -C 10 traefik "$traefik_senha") # Chama a função simulada
+        TRAEFIK_PASSWORD_HASH=$($HTPASSWD_CMD traefik "$traefik_senha") # Chama a função simulada
         echo -e "${GREEN}✅ Senha aceita.${NC}"
         break
     fi
