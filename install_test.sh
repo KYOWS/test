@@ -364,6 +364,8 @@ if [ "$confirma1" == "y" ]; then
         fi
         echo -e "${GREEN}✅ Docker instalado com sucesso.${NC}"
     fi
+
+    (sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
     
     ######################################
     ##### CRIANDO DOCKER-COMPOSE.YML #####
