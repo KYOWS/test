@@ -364,12 +364,13 @@ if [ "$confirma1" == "y" ]; then
         fi
         echo -e "${GREEN}✅ Docker instalado com sucesso.${NC}"
     fi
-
-    (sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
-    
+   
     ######################################
     ##### CRIANDO DOCKER-COMPOSE.YML #####
     ######################################
+
+     #(sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
+    (sudo mkdir -p /docker/traefik && cd /docker) > /dev/null 2>&1 & spinner $!
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat > docker-compose.yml <<EOL
@@ -428,6 +429,8 @@ EOL
  ################################
  ##### CRIANDO TRAEFIK.TOML #####
  ################################
+
+ (cd /docker/traefik) > /dev/null 2>&1 & spinner $!
     
    echo -e "${YELLOW}📝 Criando traefik.toml...${NC}"
     cat > traefik.toml <<EOL
