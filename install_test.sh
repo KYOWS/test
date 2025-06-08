@@ -129,23 +129,8 @@ validate_email() {
 }
 
 # Função para validar domínio (formato específico: pelo menos 3 partes)
-validate_domain() {
-    # Exige formato 'subdominio.dominio.tld' ou 'subdominio.dominio.tld.tld_nacional'
-    # Ex: traefik.seudominio.com OU traefik.seudominio.com.br
+validate_domain() {    
     local domain_regex="^[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
-    
-    # Explicação desta nova regex:
-    # ^: Início da string.
-    # (?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+: Este é um grupo de "partes" do domínio.
-    #    - `(?:...)`: Grupo não capturante.
-    #    - `[a-zA-Z0-9]`: Começa com letra ou número.
-    #    - `(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?`: Opcionalmente, pode ter hífens no meio, não no início/fim, máx 61 caracteres.
-    #    - `\.`: Seguido por um ponto.
-    # {2,}: Esta é a parte crucial! Exige que o grupo anterior (a "parte" do domínio seguida por um ponto) se repita **pelo menos 2 vezes**.
-    #      Isso garante que teremos no mínimo "algo.algo." antes do TLD final, ou seja, pelo menos 3 partes no total.
-    # [a-zA-Z]{2,}$": Finaliza com o TLD, que deve ter 2 ou mais letras.
-    # $: Fim da string.
-
     if [[ "$1" =~ $domain_regex ]]; then
         return 0 # Válido
     else
