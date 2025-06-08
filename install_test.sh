@@ -104,13 +104,10 @@ show_animated_logo() {
 
 function show_banner() {
 
-    echo -e "${GREEN}"
-    echo -e "██████████████████████████████████████████████████████████████████████████████"
-    echo -e "██                                                                          ██${YELLOW}"
-    echo -e "██                Preencha as informações solicitadas abaixo                "
-    echo -e "${GREEN}██"
-    echo -e "██                                                                          ██"
-    echo -e "██████████████████████████████████████████████████████████████████████████████"
+    echo -e "${YELLOW}"
+    echo -e "█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█"    
+    echo -e "█     Preencha as informações solicitadas abaixo     █"   
+    echo -e "█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█"
     echo -e "${NC}"
 }
 
