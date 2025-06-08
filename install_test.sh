@@ -351,6 +351,8 @@ if [ "$confirma1" == "y" ]; then
     ###################################################################
     ##### Verificar se o Docker já está instalado, senão instalar #####
     ###################################################################
+
+    (sudo mkdir -p /docker/traefik && cd /docker) > /dev/null 2>&1 & spinner $!
     
     if ! check_docker_installed; then
         echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
@@ -368,9 +370,8 @@ if [ "$confirma1" == "y" ]; then
     ######################################
     ##### CRIANDO DOCKER-COMPOSE.YML #####
     ######################################
-
-     #(sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
-    (sudo mkdir -p /docker/traefik && cd /docker) > /dev/null 2>&1 & spinner $!
+     
+    (cd /docker) > /dev/null 2>&1 & spinner $!
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat > docker-compose.yml <<EOL
