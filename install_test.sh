@@ -225,6 +225,11 @@ while true; do
 done
 echo ""
 
+clear
+show_animated_logo
+show_banner
+echo ""
+
 show_step 2
 while true; do
     read -p "🌐 Dominio do Traefik (ex: traefik.seudominio.com): " traefik_domain
@@ -235,6 +240,11 @@ while true; do
         echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
     fi
 done
+echo ""
+
+clear
+show_animated_logo
+show_banner
 echo ""
 
 show_step 3
@@ -249,6 +259,11 @@ while true; do
 done
 echo ""
 
+clear
+show_animated_logo
+show_banner
+echo ""
+
 show_step 4
 while true; do
     read -s -p "🔑 Senha do Traefik (mínimo 8 caracteres, com maiúscula, minúscula, número e especial): " traefik_senha
@@ -258,6 +273,11 @@ while true; do
         break
     fi
 done
+echo ""
+
+clear
+show_animated_logo
+show_banner
 echo ""
 
 show_step 5
@@ -270,6 +290,11 @@ while true; do
         echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
     fi
 done
+echo ""
+
+clear
+show_animated_logo
+show_banner
 echo ""
 
 show_step 6
