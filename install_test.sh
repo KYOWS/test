@@ -94,8 +94,7 @@ show_animated_logo() {
     echo -e "██      ██    ██  ██    ██  ███████▀  ██  ██  ██▀██▄██"
     echo -e "██      ██    ██  ██    ██  ██        ██  ██  ██  ▀███"
     echo -e "██████  ▀██████▀  ▀██████▀  ██        ██  ██  ██    ▀█"
-    echo -e "${NC}"
-    #sleep 1
+    echo -e "${NC}"   
 }
 
 ##################################################
@@ -206,6 +205,7 @@ validate_password_complexity() {
 
 clear
 show_animated_logo
+sleep 1
 show_banner
 echo ""
 
@@ -223,7 +223,6 @@ while true; do
         echo -e "${RED}❌ E-mail inválido. Por favor, insira um endereço de e-mail válido (ex: seu.email@dominio.com).${NC}"
     fi
 done
-echo ""
 
 clear
 show_animated_logo
@@ -240,7 +239,6 @@ while true; do
         echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
     fi
 done
-echo ""
 
 clear
 show_animated_logo
@@ -257,7 +255,6 @@ while true; do
         echo -e "${RED}❌ Usuário inválido. Por favor, insira um usuário válido. Mínimo de 4 caracteres.${NC}"
     fi
 done
-echo ""
 
 clear
 show_animated_logo
@@ -273,7 +270,6 @@ while true; do
         break
     fi
 done
-echo ""
 
 clear
 show_animated_logo
@@ -290,7 +286,6 @@ while true; do
         echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
     fi
 done
-echo ""
 
 clear
 show_animated_logo
@@ -307,7 +302,6 @@ while true; do
         echo -e "${RED}❌ Domínio inválido. Por favor, insira um domínio válido.${NC}"
     fi
 done
-echo ""
 
 ################################
 ##### Verificação de dados #####
