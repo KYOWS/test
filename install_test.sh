@@ -117,7 +117,7 @@ function show_banner() {
 
 function show_step() {
     local current=$1
-    local total=5
+    local total=6
     local percent=$((current * 100 / total))
     local completed=$((percent / 2)) # 50 caracteres para a barra
 
