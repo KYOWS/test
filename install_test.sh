@@ -19,7 +19,9 @@ check_apache2_utils() {
     return 0
 }
 
-# Função para mostrar spinner de carregamento
+#######################################################
+##### Função para mostrar spinner de carregamento #####
+#######################################################
 spinner() {
     local pid=$1
     local delay=0.1
@@ -35,7 +37,10 @@ spinner() {
     printf "    \b\b\b\b"
 }
 
-# Função para verificar requisitos do sistema
+########################################################
+###### Função para verificar requisitos do sistema #####
+########################################################
+
 check_system_requirements() {
     echo -e "${BLUE}Verificando requisitos do sistema...${NC}"
 
@@ -57,7 +62,10 @@ check_system_requirements() {
     return 0
 }
 
-# Função para verificar se o Docker já está instalado
+###############################################################
+##### Função para verificar se o Docker já está instalado #####
+###############################################################
+
 check_docker_installed() {
     if command -v docker &> /dev/null; then
         echo -e "${GREEN}✅ Docker já está instalado.${NC}"
@@ -68,7 +76,10 @@ check_docker_installed() {
     fi
 }
 
-# Logo animado
+#########################
+###### Logo animado #####
+#########################
+
 show_animated_logo() {
     clear
     echo -e "${BLUE}"
@@ -81,7 +92,10 @@ show_animated_logo() {
     sleep 1
 }
 
-# Função para mostrar um banner colorido
+##################################################
+##### Função para mostrar um banner colorido #####
+##################################################
+
 function show_banner() {
     echo -e "${GREEN}██████████████████████████████████████████████████████████████████████████████"
     echo -e "██                                                                          ██"
@@ -90,7 +104,10 @@ function show_banner() {
     echo -e "██████████████████████████████████████████████████████████████████████████████${NC}"
 }
 
-# Função para mostrar uma mensagem de etapa com barra de progresso
+############################################################################
+##### Função para mostrar uma mensagem de etapa com barra de progresso #####
+############################################################################
+
 function show_step() {
     local current=$1
     local total=5
@@ -108,7 +125,10 @@ function show_step() {
     echo -e "] ${percent}%${NC}"
 }
 
-# Função para validar e-mail
+######################################
+##### Função para validar e-mail #####
+######################################
+
 validate_email() {
     local email_regex="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
     if [[ $1 =~ $email_regex ]]; then
@@ -118,7 +138,10 @@ validate_email() {
     fi
 }
 
-# Função para validar domínio (formato específico: pelo menos 3 partes)
+#################################################################################
+##### Função para validar domínio (formato específico: pelo menos 3 partes) #####
+#################################################################################
+
 validate_domain() {    
     local domain_regex="^[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
     if [[ "$1" =~ $domain_regex ]]; then
@@ -128,7 +151,10 @@ validate_domain() {
     fi
 }
 
-# Função para validar usuário
+#######################################
+##### Função para validar usuário #####
+#######################################
+
 validate_user() {    
     local domain_regex="^[a-zA-Z0-9]{4,}$"
     if [[ "$1" =~ $domain_regex ]]; then
@@ -138,7 +164,10 @@ validate_user() {
     fi
 }
 
-# Função para validar complexidade da senha
+#####################################################
+##### Função para validar complexidade da senha #####
+#####################################################
+
 validate_password_complexity() {
     local password="$1"
     if (( ${#password} < 8 )); then
@@ -164,13 +193,19 @@ validate_password_complexity() {
     return 0 # Válido
 }
 
-# Mostrar banner inicial
+##################################
+##### Mostrar banner inicial #####
+##################################
+
 clear
 show_animated_logo
 show_banner
 echo ""
 
-# Solicitar informações do usuário com validação
+##########################################################
+##### Solicitar informações do usuário com validação #####
+##########################################################
+
 show_step 1
 while true; do
     read -p "📧 Endereço de e-mail (para certificados SSL): " email
@@ -242,7 +277,10 @@ while true; do
 done
 echo ""
 
-# Verificação de dados
+################################
+##### Verificação de dados #####
+################################
+
 clear
 echo -e "${BLUE}📋 Resumo das Informações${NC}"
 echo -e "${GREEN}================================${NC}"
@@ -259,12 +297,17 @@ read -p "As informações estão certas? (y/n): " confirma1
 if [ "$confirma1" == "y" ]; then
     clear
 
-    # Verificar requisitos do sistema (SIMULADO)
+    ###########################################
+    ##### Verificar requisitos do sistema #####
+    ###########################################
+    
     check_system_requirements || { echo -e "${RED}❌ Instalação cancelada devido a requisitos do sistema não atendidos.${NC}"; exit 1; }
 
     echo -e "${BLUE}🚀 Iniciando instalação ...${NC}"
-    
-    ##### INSTALANDO DEPENDENCIAS  
+
+    ###################################
+    ##### INSTALANDO DEPENDENCIAS ##### 
+    ###################################
    
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
     
@@ -279,10 +322,14 @@ if [ "$confirma1" == "y" ]; then
     encrypted_password='12345678'
     echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
-    ##### Verificar se o Docker já está instalado, senão instalar
+    ###################################################################
+    ##### Verificar se o Docker já está instalado, senão instalar #####
+    ###################################################################
+    
     if ! check_docker_installed; then
         echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
-        
+
+        #### mudar
         (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
         
         if [ $? -ne 0 ]; then
@@ -436,12 +483,16 @@ EOL
     fi
     
     echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
-    
+
+    ###############################
     ##### INICIANDO CONTAINER #####
+    ###############################
     
-    echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"
-    (sudo docker compose up -d) > /dev/null 2>&1 &
-    spinner $!
+    echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
+    
+    #mudar (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!
+    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+    
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao iniciar os containers Docker. Verifique a saída de 'sudo docker compose up'.${NC}"
         exit 1
