@@ -211,9 +211,7 @@ show_step 4
 while true; do
     read -s -p "🔑 Senha do Traefik (mínimo 8 caracteres, com maiúscula, minúscula, número e especial): " traefik_senha
     echo "" # Quebra de linha após a entrada da senha oculta
-    if validate_password_complexity "$traefik_senha"; then
-        # Gerar hash da senha para maior segurança no docker-compose.yml
-        #TRAEFIK_PASSWORD_HASH=$("$traefik_user" "$traefik_senha")
+    if validate_password_complexity "$traefik_senha"; then              
         echo -e "${GREEN}✅ Senha aceita.${NC}"
         break
     fi
@@ -277,6 +275,8 @@ if [ "$confirma1" == "y" ]; then
         exit 1
     fi
     check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
+    #encrypted_password=$(htpasswd -nb -B -C 10 $traefik_user" "$traefik_senha" | head -n 1)
+    encrypted_password='12345678'
     echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
     ##### Verificar se o Docker já está instalado, senão instalar
@@ -291,8 +291,10 @@ if [ "$confirma1" == "y" ]; then
         fi
         echo -e "${GREEN}✅ Docker instalado com sucesso.${NC}"
     fi
-   
-    ##### CRIANDO DOCKER-COMPOSE.YML
+    
+    ######################################
+    ##### CRIANDO DOCKER-COMPOSE.YML #####
+    ######################################
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat > docker-compose.yml <<EOL
@@ -348,19 +350,95 @@ networks:
 EOL
     echo -e "${GREEN}✅ docker-compose.yml criado com sucesso.${NC}"
 
+ ################################
+ ##### CRIANDO TRAEFIK.TOML #####
+ ################################
     
-    ##### CERTIFICADOS LETSENCRYPT
+   echo -e "${YELLOW}📝 Criando traefik.toml...${NC}"
+    cat > traefik.toml <<EOL
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+    
+    [entryPoints.web.http]
+      [entryPoints.web.http.redirections]
+        [entryPoints.web.http.redirections.entryPoint]
+          to = "websecure"
+          scheme = "https"
+
+  [entryPoints.websecure]
+    address = ":443"
+
+[log]
+  level = "WARN"
+
+[accessLog]
+
+[metrics]
+  [metrics.prometheus]
+    addEntryPointsLabels = true
+    addServicesLabels = true
+    addRoutersLabels = true
+
+[api]
+  dashboard = true
+
+[certificatesResolvers.lets-encrypt.acme]
+  email = "$email"
+  storage = "acme.json"
+  [certificatesResolvers.lets-encrypt.acme.tlsChallenge]
+
+[providers.docker]
+  watch = true
+  network = "web"
+
+[providers.file]
+  filename = "traefik_dynamic.toml"
+EOL
+    echo -e "${GREEN}✅ traefik.toml criado com sucesso.${NC}"
+    
+########################################
+##### CRIANDO TRAEFIK_DYNAMIC.TOML #####
+########################################
+
+   echo -e "${YELLOW}📝 Criando traefik_dynamic.toml...${NC}"
+    cat > traefik_dynamic.toml <<EOL
+[http.middlewares.simpleAuth.basicAuth]
+  users = [
+    "$encrypted_password"
+  ]
+
+# Use with traefik.http.routers.myRouter.middlewares: "redirect-www-to-main@file"
+[http.middlewares]
+  [http.middlewares.redirect-www-to-main.redirectregex]
+      permanent = true
+      regex = "^https?://www\\.(.+)"
+      replacement = "https://${1}"
+
+[http.routers.api]
+  rule = "Host(`$traefik_domain`)"
+  entrypoints = ["websecure"]
+  middlewares = ["simpleAuth"]
+  service = "api@internal"
+  [http.routers.api.tls]
+    certResolver = "lets-encrypt"
+EOL
+    echo -e "${GREEN}✅ traefik_dynamic.toml criado com sucesso.${NC}"
+
+    ####################################
+    ##### CERTIFICADOS LETSENCRYPT #####
+    ####################################
     
     echo -e "${YELLOW}📝 Configurando permissões para acme.json...${NC}"
+    
     if [ ! -f acme.json ]; then
-        touch acme.json
+      touch acme.json && chmod 600 acme.json
     fi
-    sudo chmod 600 acme.json
+    
     echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
-
-    #########################################################
-    # INICIANDO CONTAINER
-    #########################################################
+    
+    ##### INICIANDO CONTAINER #####
+    
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"
     (sudo docker compose up -d) > /dev/null 2>&1 &
     spinner $!
@@ -382,7 +460,7 @@ EOL
     echo ""
     echo -e "${BLUE}💡 Dica: Aguarde alguns minutos para que os certificados SSL sejam gerados pelo Let's Encrypt.${NC}"
     echo -e "${BLUE}➡️ Lembre-se de configurar os registros DNS (A/AAAA) para os domínios acima apontarem para este servidor!${NC}"
-    echo -e "${GREEN}🌟 Visite: https://packtypebot.com.br${NC}"
+    echo -e "${GREEN}🌟 Visite: https://loopiin.com.br${NC}"
 else
     echo -e "${RED}❌ Instalação cancelada. Por favor, inicie novamente se desejar prosseguir.${NC}"
     exit 0
