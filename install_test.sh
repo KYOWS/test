@@ -24,8 +24,8 @@ spinner() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    #while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-    for i in {1..100}; do # Simula 5 iterações rápidas
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+    #for i in {1..100}; do # Simula 5 iterações rápidas
         local temp=${spinstr#?}
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
