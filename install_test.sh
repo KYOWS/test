@@ -1,27 +1,23 @@
 #!/bin/bash
 
-# Cores
 GREEN='\e[32m'
 YELLOW='\e[33m'
 RED='\e[31m'
 BLUE='\e[34m'
 NC='\e[0m' # No Color
 
-# Definindo um HTPASSWD_CMD simulado para teste
-# Ele apenas retorna um valor fixo, não gera um hash real
+
 HTPASSWD_CMD_TEST() {
     echo "traefik:\$apr1\$abc.123\$xyz.456" # Hash simulado
 }
-HTPASSWD_CMD="HTPASSWD_CMD_TEST" # Aponta para a função simulada
+HTPASSWD_CMD="HTPASSWD_CMD_TEST"
 
-# Função para mostrar spinner de carregamento (mantida para simulação visual)
+# Função para mostrar spinner de carregamento
 spinner() {
     local pid=$1
     local delay=0.1
     local spinstr='|/-\'
-    # Em um script de teste, você pode querer um spinner mais curto ou desativá-lo
-    # Para demonstração, vamos simular uma execução rápida.
-    for i in {1..5}; do # Simula 5 iterações rápidas
+    while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
         local temp=${spinstr#?}
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
@@ -31,33 +27,37 @@ spinner() {
     printf "    \b\b\b\b"
 }
 
-# Função para verificar requisitos do sistema (SIMULADA)
+# Função para verificar requisitos do sistema
 check_system_requirements() {
-    echo -e "${BLUE}Verificando requisitos do sistema (SIMULADO)...${NC}"
-    # Valores simulados para sucesso
-    local free_space=15 # Simula 15GB livres
-    local total_mem=4   # Simula 4GB de RAM
+    echo -e "${BLUE}Verificando requisitos do sistema...${NC}"
 
-    if [ "$free_space" -lt 10 ]; then
-        echo -e "${RED}❌ Erro SIMULADO: Espaço em disco insuficiente.${NC}"
+    # Verificar espaço em disco (em GB, removendo a unidade 'G')
+    local free_space=$(df -BG / | awk 'NR==2 {print $4}' | tr -d 'G')
+    if [ "$free_space" -lt 15 ]; then
+        echo -e "${RED}❌ Erro: Espaço em disco insuficiente. Mínimo requerido: 15GB. Livre: ${free_space}GB${NC}"
         return 1
     fi
 
+    # Verificar memória RAM
+    local total_mem=$(free -g | awk 'NR==2 {print $2}')
     if [ "$total_mem" -lt 2 ]; then
-        echo -e "${RED}❌ Erro SIMULADO: Memória RAM insuficiente.${NC}"
+        echo -e "${RED}❌ Erro: Memória RAM insuficiente. Mínimo requerido: 2GB. Disponível: ${total_mem}GB${NC}"
         return 1
     fi
 
-    echo -e "${GREEN}✅ Requisitos do sistema atendidos (SIMULADO)${NC}"
+    echo -e "${GREEN}✅ Requisitos do sistema atendidos${NC}"
     return 0
 }
 
-# Função para verificar se o Docker já está instalado (SIMULADA)
+# Função para verificar se o Docker já está instalado
 check_docker_installed() {
-    echo -e "${BLUE}Verificando Docker (SIMULADO)...${NC}"
-    # Para o teste, vamos simular que o Docker não está instalado para testar o fluxo de instalação
-    # Mude '1' para '0' para simular que já está instalado.
-    return 1 # Simula que o Docker NÃO está instalado
+    if command -v docker &> /dev/null; then
+        echo -e "${GREEN}✅ Docker já está instalado.${NC}"
+        return 0
+    else
+        echo -e "${YELLOW}🐳 Docker não encontrado. Será instalado.${NC}"
+        return 1
+    fi
 }
 
 # Logo animado
