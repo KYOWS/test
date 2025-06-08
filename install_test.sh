@@ -11,18 +11,7 @@ check_apache2_utils() {
     echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
     if ! command -v htpasswd &> /dev/null; then
         echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"
-        (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 &
-        local pid=$!
-        local delay=0.1
-        local spinstr='|/-\'
-        while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-            local temp=${spinstr#?}
-            printf " [%c]  " "$spinstr"
-            local spinstr=$temp${spinstr%"$temp"}
-            sleep $delay
-            printf "\b\b\b\b\b\b"
-        done
-        printf "    \b\b\b\b"
+        
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
         echo -e "${GREEN}✅ apache2-utils já está instalado.${NC}"
@@ -271,13 +260,14 @@ if [ "$confirma1" == "y" ]; then
     clear
 
     # Verificar requisitos do sistema (SIMULADO)
-    check_system_requirements || { echo -e "${RED}❌ Instalação cancelada devido a requisitos do sistema não atendidos (SIMULADO).${NC}"; exit 1; }
+    check_system_requirements || { echo -e "${RED}❌ Instalação cancelada devido a requisitos do sistema não atendidos.${NC}"; exit 1; }
 
     echo -e "${BLUE}🚀 Iniciando instalação (SIMULADA)...${NC}"
+    
+    ### INSTALANDO DEPENDENCIAS
 
-    #########################################################
-    # INSTALANDO DEPENDENCIAS (SIMULADO)
-    #########################################################
+    check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
+   
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências (SIMULADO)...${NC}"
     # Nenhuma execução real aqui, apenas simulação de tempo
     sleep 1 && spinner $$ # Simulando um PID
