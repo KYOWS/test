@@ -16,7 +16,7 @@ check_apache2_utils() {
         echo -e "${YELLOW}Instalando apache2-utils...${NC}"
 
         #mudar (sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
-        (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+        (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
         
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
@@ -354,7 +354,7 @@ if [ "$confirma1" == "y" ]; then
    
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
     
-    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+    (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
     
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao atualizar o sistema e instalar dependências. Verifique sua conexão ou permissões.${NC}"
@@ -375,7 +375,7 @@ if [ "$confirma1" == "y" ]; then
         echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
 
         #### install_docker_function > /dev/null 2>&1 & spinner $!
-        (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+        (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
         
         if [ $? -ne 0 ]; then
             echo -e "${RED}❌ Erro ao instalar o Docker. Por favor, verifique a saída do comando.${NC}"
@@ -560,7 +560,7 @@ EOL
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
     
     #mudar (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!
-    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+    (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
     
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao iniciar os containers Docker. Verifique a saída de 'sudo docker compose up'.${NC}"
