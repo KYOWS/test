@@ -387,7 +387,7 @@ services:
       - 443:443
     volumes:
       - /etc/localtime:/etc/localtime
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /docker/traefik/traefik.toml:/traefik.toml
       - /docker/traefik/traefik_dynamic.toml:/traefik_dynamic.toml
       - /docker/traefik/acme.json:/acme.json
@@ -452,6 +452,7 @@ EOL
 
   [entryPoints.websecure]
     address = ":443"
+    middlewares = ["securityHeaders"]
 
 [log]
   level = "WARN"
@@ -475,6 +476,7 @@ EOL
 [providers.docker]
   watch = true
   network = "web"
+  exposedByDefault = false
 
 [providers.file]
   filename = "traefik_dynamic.toml"
