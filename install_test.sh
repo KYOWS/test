@@ -197,7 +197,7 @@ echo ""
 show_step 3
 while true; do
     read -p "🌐 Usuário do Traefik (ex: admin): " traefik_user
-    if validate_user "$traefik_domain"; then
+    if validate_user "$traefik_user"; then
         echo -e "${GREEN}✅ Usuário válido.${NC}"
         break
     else
