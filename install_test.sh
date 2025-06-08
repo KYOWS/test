@@ -10,8 +10,7 @@ NC='\e[0m' # No Color
 check_apache2_utils() {
     echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
     if ! command -v htpasswd &> /dev/null; then
-        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"
-        
+        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"        
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
         echo -e "${GREEN}✅ apache2-utils já está instalado.${NC}"
@@ -25,7 +24,7 @@ spinner() {
     local delay=0.1
     local spinstr='|/-\'
     #while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
-    for i in {1..5}; do # Simula 5 iterações rápidas
+    for i in {1..100}; do # Simula 5 iterações rápidas
         local temp=${spinstr#?}
         printf " [%c]  " "$spinstr"
         local spinstr=$temp${spinstr%"$temp"}
