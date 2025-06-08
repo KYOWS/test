@@ -262,16 +262,19 @@ if [ "$confirma1" == "y" ]; then
     # Verificar requisitos do sistema (SIMULADO)
     check_system_requirements || { echo -e "${RED}❌ Instalação cancelada devido a requisitos do sistema não atendidos.${NC}"; exit 1; }
 
-    echo -e "${BLUE}🚀 Iniciando instalação (SIMULADA)...${NC}"
+    echo -e "${BLUE}🚀 Iniciando instalação ...${NC}"
     
-    ### INSTALANDO DEPENDENCIAS
-
-    check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
+    ### INSTALANDO DEPENDENCIAS  
    
-    echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências (SIMULADO)...${NC}"
-    # Nenhuma execução real aqui, apenas simulação de tempo
-    sleep 1 && spinner $$ # Simulando um PID
-    echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas (SIMULADO).${NC}"
+    echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
+    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 &
+    spinner $!
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Erro ao atualizar o sistema e instalar dependências. Verifique sua conexão ou permissões.${NC}"
+        exit 1
+    fi
+    check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
+    echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
     # Verificar se o Docker já está instalado, senão instalar (SIMULADO)
     if ! check_docker_installed; then
