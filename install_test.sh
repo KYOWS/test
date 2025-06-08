@@ -201,7 +201,7 @@ while true; do
         echo -e "${GREEN}✅ Usuário válido.${NC}"
         break
     else
-        echo -e "${RED}❌ Usuário inválido. Por favor, insira um usuário válido.Mínimo de 4 caracteres.${NC}"
+        echo -e "${RED}❌ Usuário inválido. Por favor, insira um usuário válido. Mínimo de 4 caracteres.${NC}"
     fi
 done
 echo ""
