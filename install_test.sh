@@ -10,7 +10,8 @@ NC='\e[0m' # No Color
 check_apache2_utils() {
     echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
     if ! command -v htpasswd &> /dev/null; then
-        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"        
+        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"
+        (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
         echo -e "${GREEN}✅ apache2-utils já está instalado.${NC}"
@@ -249,6 +250,7 @@ echo -e "${BLUE}📋 Resumo das Informações${NC}"
 echo -e "${GREEN}================================${NC}"
 echo -e "📧 Seu E-mail: ${YELLOW}$email${NC}"
 echo -e "🌐 Dominio do Traefik: ${YELLOW}$traefik_domain${NC}"
+echo -e "🌐 Usuário do Traefik: ${YELLOW}$traefik_user${NC}"
 echo -e "🔑 Senha do Traefik: ${YELLOW}********${NC}" # Apenas para visualização
 echo -e "🌐 Dominio do Portainer: ${YELLOW}$portainer_domain${NC}"
 echo -e "🌐 Dominio do Edge: ${YELLOW}$edge_domain${NC}"
@@ -267,8 +269,9 @@ if [ "$confirma1" == "y" ]; then
     ### INSTALANDO DEPENDENCIAS  
    
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
-    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 &
-    spinner $!
+    
+    (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+    
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao atualizar o sistema e instalar dependências. Verifique sua conexão ou permissões.${NC}"
         exit 1
