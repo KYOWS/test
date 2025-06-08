@@ -138,6 +138,16 @@ validate_domain() {
     fi
 }
 
+# Função para validar usuário
+validate_user() {    
+    local domain_regex="^[a-zA-Z0-9]{4,}$"
+    if [[ "$1" =~ $domain_regex ]]; then
+        return 0 # Válido
+    else
+        return 1 # Inválido
+    fi
+}
+
 # Função para validar complexidade da senha
 validate_password_complexity() {
     local password="$1"
@@ -170,15 +180,6 @@ show_animated_logo
 show_banner
 echo ""
 
-# --- PARA TESTE RÁPIDO E AUTOMATIZADO, DESCOMENTE AS LINHAS ABAIXO E COMENTE AS "read -p" ---
-#email="teste@exemplo.com"
-#traefik_domain="traefik.teste.com"
-#traefik_senha="SenhaSegura123!"
-#portainer_domain="portainer.teste.com"
-#edge_domain="edge.teste.com"
-#TRAEFIK_PASSWORD_HASH=$($HTPASSWD_CMD -nb traefik "$traefik_senha")
-# --- FIM DAS ENTRADAS PRÉ-DEFINIDAS ---
-
 # Solicitar informações do usuário com validação
 show_step 1
 while true; do
@@ -206,18 +207,30 @@ echo ""
 
 show_step 3
 while true; do
+    read -p "🌐 Usuário do Traefik (ex: admin): " traefik_user
+    if validate_user "$traefik_domain"; then
+        echo -e "${GREEN}✅ Usuário válido.${NC}"
+        break
+    else
+        echo -e "${RED}❌ Usuário inválido. Por favor, insira um usuário válido.Mínimo de 4 caracteres.${NC}"
+    fi
+done
+echo ""
+
+show_step 4
+while true; do
     read -s -p "🔑 Senha do Traefik (mínimo 8 caracteres, com maiúscula, minúscula, número e especial): " traefik_senha
     echo "" # Quebra de linha após a entrada da senha oculta
     if validate_password_complexity "$traefik_senha"; then
-        # Gerar hash da senha para maior segurança no docker-compose.yml (simulado)
-        TRAEFIK_PASSWORD_HASH=$($HTPASSWD_CMD traefik "$traefik_senha") # Chama a função simulada
+        # Gerar hash da senha para maior segurança no docker-compose.yml
+        #TRAEFIK_PASSWORD_HASH=$("$traefik_user" "$traefik_senha")
         echo -e "${GREEN}✅ Senha aceita.${NC}"
         break
     fi
 done
 echo ""
 
-show_step 4
+show_step 5
 while true; do
     read -p "🌐 Dominio do Portainer (ex: portainer.seudominio.com): " portainer_domain
     if validate_domain "$portainer_domain"; then
@@ -229,7 +242,7 @@ while true; do
 done
 echo ""
 
-show_step 5
+show_step 6
 while true; do
     read -p "🌐  Dominio do Edge (ex: edge.seudominio.com): " edge_domain
     if validate_domain "$edge_domain"; then
@@ -247,7 +260,7 @@ echo -e "${BLUE}📋 Resumo das Informações${NC}"
 echo -e "${GREEN}================================${NC}"
 echo -e "📧 Seu E-mail: ${YELLOW}$email${NC}"
 echo -e "🌐 Dominio do Traefik: ${YELLOW}$traefik_domain${NC}"
-echo -e "🔑 Senha do Traefik: ${YELLOW}******** (hash gerado simulado)${NC}" # Apenas para visualização
+echo -e "🔑 Senha do Traefik: ${YELLOW}********${NC}" # Apenas para visualização
 echo -e "🌐 Dominio do Portainer: ${YELLOW}$portainer_domain${NC}"
 echo -e "🌐 Dominio do Edge: ${YELLOW}$edge_domain${NC}"
 echo -e "${GREEN}================================${NC}"
