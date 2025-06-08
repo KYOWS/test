@@ -266,7 +266,7 @@ if [ "$confirma1" == "y" ]; then
 
     echo -e "${BLUE}🚀 Iniciando instalação ...${NC}"
     
-    ### INSTALANDO DEPENDENCIAS  
+    ##### INSTALANDO DEPENDENCIAS  
    
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
     
@@ -279,124 +279,111 @@ if [ "$confirma1" == "y" ]; then
     check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
     echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
-    # Verificar se o Docker já está instalado, senão instalar (SIMULADO)
+    ##### Verificar se o Docker já está instalado, senão instalar
     if ! check_docker_installed; then
-        echo -e "${YELLOW}🐳 Instalando Docker (SIMULADO)...${NC}"
-        # Nenhuma execução real aqui, apenas simulação de tempo
-        sleep 1 && spinner $$
-        echo -e "${GREEN}✅ Docker instalado com sucesso (SIMULADO).${NC}"
+        echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
+        
+        (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
+        
+        if [ $? -ne 0 ]; then
+            echo -e "${RED}❌ Erro ao instalar o Docker. Por favor, verifique a saída do comando.${NC}"
+            exit 1
+        fi
+        echo -e "${GREEN}✅ Docker instalado com sucesso.${NC}"
     fi
-
-    # Adicionar o usuário atual ao grupo docker para não precisar de sudo (SIMULADO)
-    echo -e "${YELLOW}Adicionando ${USER} ao grupo 'docker' para gerenciar Docker sem 'sudo' (SIMULADO)...${NC}"
-    # Nenhuma execução real aqui
-    echo -e "${YELLOW}Por favor, faça logout e login novamente para que as alterações no grupo entrem em vigor (SIMULADO).${NC}"
-    echo -e "${BLUE}Pressione qualquer tecla para continuar (o script pode precisar ser reexecutado após o login) (SIMULADO).${NC}"
-    read -n 1 -s
-    clear
-
-    # Simular criação/verificação de diretório
-    echo -e "${YELLOW}Simulando criação do diretório '$HOME/Portainer' e navegação...${NC}"
-    # Não cria o diretório de verdade, apenas simula a lógica
-    if [ ! -d "$HOME/Portainer_TEST" ]; then # Usando _TEST para não conflitar com o real
-        echo -e "${GREEN}✅ Diretório '$HOME/Portainer_TEST' seria criado.${NC}"
-    else
-        echo -e "${YELLOW}Diretório '$HOME/Portainer_TEST' já existiria. Usando o existente.${NC}"
-    fi
-    # Não faz 'cd' real, apenas simula o sucesso
-    echo -e "${GREEN}✅ Simulação de navegação para '$HOME/Portainer_TEST' bem-sucedida.${NC}"
-
-    sleep 0.5
-    clear
-
-    #########################################################
-    # CRIANDO DOCKER-COMPOSE.YML (SIMULADO)
-    #########################################################
-    echo -e "${YELLOW}📝 Conteúdo do docker-compose.yml seria gerado com suas informações:${NC}"
-    echo -e "${BLUE}--- INÍCIO DO CONTEÚDO SIMULADO ---${NC}"
-    cat <<EOL
-services:
+   
+    ##### CRIANDO DOCKER-COMPOSE.YML
+    
+   echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
+    cat > docker-compose.yml <<EOL
+services:  
   traefik:
+    image: traefik:latest
     container_name: traefik
-    image: "traefik:latest"
     restart: always
-    command:
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --api.dashboard=true
-      - --providers.docker
-      - --log.level=ERROR
-      - --certificatesresolvers.leresolver.acme.httpchallenge=true
-      - --certificatesresolvers.leresolver.acme.email=$email
-      - --certificatesresolvers.leresolver.acme.storage=/etc/traefik/acme.json
-      - --certificatesresolvers.leresolver.acme.httpchallenge.entrypoint=web
+    networks:
+      - web
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./acme.json:/etc/traefik/acme.json" # Montado no container
-    labels:
-      - "traefik.http.routers.http-catchall.rule=hostregexp(\`{host:.+}\`)"
-      - "traefik.http.routers.http-catchall.entrypoints=web"
-      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
-      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
-      - "traefik.http.routers.traefik-dashboard.rule=Host(\`$traefik_domain\`)"
-      - "traefik.http.routers.traefik-dashboard.entrypoints=websecure"
-      - "traefik.http.routers.traefik-dashboard.service=api@internal"
-      - "traefik.http.routers.traefik-dashboard.tls.certresolver=leresolver"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=$TRAEFIK_PASSWORD_HASH"
-      - "traefik.http.routers.traefik-dashboard.middlewares=traefik-auth"
+      - /etc/localtime:/etc/localtime
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /docker/traefik/traefik.toml:/traefik.toml
+      - /docker/traefik/traefik_dynamic.toml:/traefik_dynamic.toml
+      - /docker/traefik/acme.json:/acme.json
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
   portainer:
     image: portainer/portainer-ce:latest
-    command: -H unix:///var/run/docker.sock
+    container_name: portainer
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
+      - /home/docker/portainer/data:/data
+    ports:
+      - 8000:8000
+      - 9000:9000
+      - 9443:9443
+    networks:
+      - web
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer-frontend.rule=Host(\`$portainer_domain\`)"
-      - "traefik.http.routers.portainer-frontend.entrypoints=websecure"
-      - "traefik.http.services.portainer-frontend.loadbalancer.server.port=9000"
-      - "traefik.http.routers.portainer-frontend.tls.certresolver=leresolver"
-      - "traefik.http.routers.portainer-edge.rule=Host(\`$edge_domain\`)"
-      - "traefik.http.routers.portainer-edge.entrypoints=websecure"
-      - "traefik.http.services.portainer-edge.loadbalancer.server.port=8000"
-      - "traefik.http.routers.portainer-edge.tls.certresolver=leresolver"
-volumes:
-  portainer_data:
+      - "traefik.http.routers.portainer.rule=Host(`$portainer_domain`)"
+      - "traefik.http.routers.portainer.tls=true"
+      - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.docker.network=web"
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  web:
+    external: true
 EOL
-    echo -e "${BLUE}--- FIM DO CONTEÚDO SIMULADO ---${NC}"
-    echo -e "${GREEN}✅ docker-compose.yml seria criado com sucesso.${NC}"
+    echo -e "${GREEN}✅ docker-compose.yml criado com sucesso.${NC}"
+
+    
+    ##### CERTIFICADOS LETSENCRYPT
+    
+    echo -e "${YELLOW}📝 Configurando permissões para acme.json...${NC}"
+    if [ ! -f acme.json ]; then
+        touch acme.json
+    fi
+    sudo chmod 600 acme.json
+    echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
 
     #########################################################
-    # CERTIFICADOS LETSENCRYPT (SIMULADO)
+    # INICIANDO CONTAINER
     #########################################################
-    echo -e "${YELLOW}📝 Configurando permissões para acme.json (SIMULADO)...${NC}"
-    echo -e "${GREEN}✅ Permissões para acme.json seriam configuradas.${NC}"
-
-    #########################################################
-    # INICIANDO CONTAINER (SIMULADO)
-    #########################################################
-    echo -e "${YELLOW}🚀 Iniciando containers Docker (SIMULADO)...${NC}"
-    sleep 1 && spinner $$
-    echo -e "${GREEN}✅ Containers seriam iniciados com sucesso.${NC}"
+    echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"
+    (sudo docker compose up -d) > /dev/null 2>&1 &
+    spinner $!
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Erro ao iniciar os containers Docker. Verifique a saída de 'sudo docker compose up'.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✅ Containers iniciados com sucesso.${NC}"
 
     clear
     show_animated_logo
 
-    echo -e "${GREEN}🎉 Simulação de instalação concluída com sucesso!${NC}"
-    echo -e "${BLUE}📝 Informações de Acesso (SIMULADAS):${NC}"
+    echo -e "${GREEN}🎉 Instalação concluída com sucesso!${NC}"
+    echo -e "${BLUE}📝 Informações de Acesso:${NC}"
     echo -e "${GREEN}================================${NC}"
     echo -e "🔗 Portainer: ${YELLOW}https://$portainer_domain${NC}"
     echo -e "🔗 Traefik: ${YELLOW}https://$traefik_domain${NC}"
     echo -e "${GREEN}================================${NC}"
     echo ""
-    echo -e "${BLUE}💡 Dica: Aguarde alguns minutos para que os certificados SSL sejam gerados pelo Let's Encrypt (SIMULADO).${NC}"
+    echo -e "${BLUE}💡 Dica: Aguarde alguns minutos para que os certificados SSL sejam gerados pelo Let's Encrypt.${NC}"
     echo -e "${BLUE}➡️ Lembre-se de configurar os registros DNS (A/AAAA) para os domínios acima apontarem para este servidor!${NC}"
     echo -e "${GREEN}🌟 Visite: https://packtypebot.com.br${NC}"
 else
-    echo -e "${RED}❌ Simulação de instalação cancelada. Por favor, inicie novamente se desejar prosseguir.${NC}"
+    echo -e "${RED}❌ Instalação cancelada. Por favor, inicie novamente se desejar prosseguir.${NC}"
     exit 0
 fi
