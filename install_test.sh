@@ -416,6 +416,11 @@ services:
       - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.docker.network=web"
+      - "traefik.http.routers.edge.rule=Host(`$edge_domain`)"
+      - "traefik.http.routers.edge.entrypoints=websecure"
+      - "traefik.http.services.edge.loadbalancer.server.port=8000"
+      - "traefik.http.routers.edge.service=edge"
+      - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
     logging:
       options:
         max-size: "10m"
