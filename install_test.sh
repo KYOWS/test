@@ -6,11 +6,29 @@ RED='\e[31m'
 BLUE='\e[34m'
 NC='\e[0m' # No Color
 
-
-HTPASSWD_CMD_TEST() {
-    echo "traefik:\$apr1\$abc.123\$xyz.456" # Hash simulado
+# Função para verificar a instalação do apache2-utils
+check_apache2_utils() {
+    echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
+    if ! command -v htpasswd &> /dev/null; then
+        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"
+        (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 &
+        local pid=$!
+        local delay=0.1
+        local spinstr='|/-\'
+        while [ "$(ps a | awk '{print $1}' | grep $pid)" ]; do
+            local temp=${spinstr#?}
+            printf " [%c]  " "$spinstr"
+            local spinstr=$temp${spinstr%"$temp"}
+            sleep $delay
+            printf "\b\b\b\b\b\b"
+        done
+        printf "    \b\b\b\b"
+        echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
+    else
+        echo -e "${GREEN}✅ apache2-utils já está instalado.${NC}"
+    fi
+    return 0
 }
-HTPASSWD_CMD="HTPASSWD_CMD_TEST"
 
 # Função para mostrar spinner de carregamento
 spinner() {
@@ -70,7 +88,7 @@ show_animated_logo() {
     echo -e "             ██      ██    ██  ██    ██  ██        ██  ██  ██  ████"
     echo -e "             ██████   ██████    ██████   ██        ██  ██  ██    ██"
     echo -e "${NC}"
-    sleep 0.5 # Tempo menor para teste
+    sleep 1
 }
 
 # Função para mostrar um banner colorido
