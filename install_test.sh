@@ -451,8 +451,7 @@ EOL
           scheme = "https"
 
   [entryPoints.websecure]
-    address = ":443"
-    middlewares = ["securityHeaders"]
+    address = ":443"   
 
 [log]
   level = "WARN"
@@ -500,6 +499,20 @@ EOL
       permanent = true
       regex = "^https?://www\\.(.+)"
       replacement = "https://${1}"
+
+# NOVO: Definição do middleware de segurança de cabeçalhos HTTP
+[http.middlewares.securityHeaders.headers]
+  browserXssFilter = true
+  contentTypeNosniff = true
+  frameDeny = true
+  sslRedirect = true
+  # HSTS (Strict-Transport-Security) - Descomente se tiver certeza!
+  # strictTransportSecurity = true
+  # stsSeconds = 31536000 # 1 ano
+  # stsIncludeSubdomains = true
+  # Strict-Transport-Security (HSTS) - Força o navegador a usar HTTPS
+  # para seu domínio por um período. Cuidado ao habilitar: se o HTTPS
+  # quebrar, seus usuários não conseguirão acessar por um tempo.
 
 [http.routers.api]
   rule = "Host(`$traefik_domain`)"
