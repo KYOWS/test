@@ -10,7 +10,7 @@ NC='\e[0m' # No Color
 check_apache2_utils() {
     echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
     if ! command -v htpasswd &> /dev/null; then
-        echo -e "${YELLOW}htpasswd não encontrado. Instalando apache2-utils...${NC}"
+        echo -e "${YELLOW}Instalando apache2-utils...${NC}"
         (sudo apt update -y && sudo apt upgrade -y) > /dev/null 2>&1 & spinner $!
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
