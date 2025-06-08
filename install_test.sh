@@ -6,7 +6,10 @@ RED='\e[31m'
 BLUE='\e[34m'
 NC='\e[0m' # No Color
 
-# Função para verificar a instalação do apache2-utils
+###############################################################
+##### Função para verificar a instalação do apache2-utils #####
+###############################################################
+
 check_apache2_utils() {
     echo -e "${BLUE}Verificando a instalação do apache2-utils...${NC}"
     if ! command -v htpasswd &> /dev/null; then
