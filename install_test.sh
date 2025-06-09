@@ -105,7 +105,7 @@ install_docker_function() {
 #########################
 
 show_animated_logo() {
-    clear
+    #clear
     echo -e "${BLUE}"
     echo -e "██      ▄██████▄  ▄██████▄  ███████▄  ██  ██  █▄    ██"
     echo -e "██      ██    ██  ██    ██  ██    ██  ██  ██  ███▄  ██"
