@@ -594,6 +594,7 @@ EOL
     echo -e "${BLUE}💡 Dica: Aguarde alguns minutos para que os certificados SSL sejam gerados pelo Let's Encrypt.${NC}"
     echo -e "${BLUE}➡️ Lembre-se de configurar os registros DNS (A/AAAA) para os domínios acima apontarem para este servidor!${NC}"
     echo -e "${GREEN}🌟 Visite: https://loopiin.com.br${NC}"
+    echo -e "${BLUE}➡️ Criado por Wallison Santos${NC}"
 else
     echo -e "${RED}❌ Instalação cancelada. Por favor, inicie novamente se desejar prosseguir.${NC}"
     exit 0
