@@ -581,7 +581,7 @@ EOL
     fi
     echo -e "${GREEN}✅ Containers iniciados com sucesso.${NC}"
 
-    clear
+    #clear
     show_animated_logo
 
     echo -e "${GREEN}🎉 Instalação concluída com sucesso!${NC}"
