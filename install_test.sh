@@ -15,7 +15,7 @@ check_apache2_utils() {
     if ! command -v htpasswd &> /dev/null; then
         echo -e "${YELLOW}Instalando apache2-utils...${NC}"
 
-        #mudar (sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
+        #mudar (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
         (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
         
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
