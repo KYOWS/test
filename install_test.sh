@@ -558,7 +558,7 @@ EOL
     echo -e "${YELLOW}📝 Configurando permissões para acme.json...${NC}"
     
     if [ ! -f acme.json ]; then
-      sudo touch acme.json && chmod 600 acme.json
+      sudo touch acme.json && sudo chmod 600 acme.json
     fi
     
     echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
