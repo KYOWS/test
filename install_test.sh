@@ -15,8 +15,8 @@ check_apache2_utils() {
     if ! command -v htpasswd &> /dev/null; then
         echo -e "${YELLOW}Instalando apache2-utils...${NC}"
 
-        #mudar (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
-        (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
+        (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
+        #(sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
         
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
@@ -368,8 +368,8 @@ if [ "$confirma1" == "y" ]; then
         exit 1
     fi
     check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
-    #encrypted_password=$(htpasswd -nb -B -C 10 $traefik_user" "$traefik_senha")
-    encrypted_password='admin:12345678'
+    encrypted_password=$(htpasswd -nb -B -C 10 $traefik_user" "$traefik_senha")
+    #encrypted_password='admin:12345678'
     echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
     ###################################################################
