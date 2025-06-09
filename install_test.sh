@@ -567,6 +567,9 @@ EOL
     ##### INICIANDO CONTAINER #####
     ###############################
     
+    # Entra no diretório /docker para criar os arquivos
+    cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
+    
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
     
     #mudar (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!
