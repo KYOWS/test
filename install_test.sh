@@ -384,7 +384,7 @@ if [ "$confirma1" == "y" ]; then
     fi
 
     echo -e "${YELLOW}📁 Criando diretórios e configurando...${NC}"
-    (sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
+    (sudo mkdir -p /docker/traefik && sudo mkdir -p /docker/portainer/data) > /dev/null 2>&1 & spinner $!
     wait $!
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao criar diretórios. Verifique suas permissões.${NC}"
@@ -428,7 +428,7 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /home/docker/portainer/data:/data
+      - /docker/portainer/data:/data
     ports:
       - 8000:8000
       - 9000:9000
