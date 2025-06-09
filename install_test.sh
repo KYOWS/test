@@ -105,7 +105,7 @@ install_docker_function() {
 #########################
 
 show_animated_logo() {
-    #clear
+    clear
     echo -e "${BLUE}"
     echo -e "██      ▄██████▄  ▄██████▄  ███████▄  ██  ██  █▄    ██"
     echo -e "██      ██    ██  ██    ██  ██    ██  ██  ██  ███▄  ██"
@@ -581,7 +581,7 @@ EOL
     fi
     echo -e "${GREEN}✅ Containers iniciados com sucesso.${NC}"
 
-    #clear
+    clear
     show_animated_logo
 
     echo -e "${GREEN}🎉 Instalação concluída com sucesso!${NC}"
