@@ -362,7 +362,7 @@ if [ "$confirma1" == "y" ]; then
         exit 1
     fi
     check_apache2_utils || { echo -e "${RED}❌ Não foi possível instalar o apache2-utils. Saindo.${NC}"; exit 1; }
-    #encrypted_password=$(htpasswd -nb -B -C 10 $traefik_user" "$traefik_senha" | head -n 1)
+    #encrypted_password=$(htpasswd -nb -B -C 10 $traefik_user" "$traefik_senha")
     encrypted_password='admin:12345678'
     echo -e "${GREEN}✅ Sistema atualizado e dependências básicas instaladas.${NC}"
 
