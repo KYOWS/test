@@ -405,6 +405,7 @@ services:
     image: traefik:latest
     container_name: traefik
     restart: always
+    command: -H unix:///var/run/docker.sock
     networks:
       - web
     ports:
