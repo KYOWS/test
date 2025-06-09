@@ -438,13 +438,13 @@ services:
     labels:
       - "traefik.enable=true"
     # Roteador e Serviço para a interface principal do Portainer (porta 9000)
-      - "traefik.http.routers.portainer.rule=Host(''$portainer_domain'')"
+      - "traefik.http.routers.portainer.rule=Host("$portainer_domain")"
       - "traefik.http.routers.portainer.tls=true"
       - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
       - "traefik.http.services.portainer-main.loadbalancer.server.port=9000" # Define um serviço Traefik chamado 'portainer-main'
       - "traefik.http.routers.portainer.service=portainer-main" # O roteador 'portainer' usa o serviço 'portainer-main'
     # Roteador e Serviço para o endpoint Edge do Portainer (porta 8000)
-      - "traefik.http.routers.edge.rule=Host(''$edge_domain'')"
+      - "traefik.http.routers.edge.rule=Host("$edge_domain")"
       - "traefik.http.routers.edge.entrypoints=websecure"
       - "traefik.http.services.portainer-edge.loadbalancer.server.port=8000" # Define um serviço Traefik chamado 'portainer-edge'
       - "traefik.http.routers.edge.service=portainer-edge" 
@@ -542,7 +542,7 @@ EOL
   # stsIncludeSubdomains = true  
 
 [http.routers.api]
-  rule = "Host(''$traefik_domain'')"
+  rule = "Host("$traefik_domain")"
   entrypoints = ["websecure"]
   middlewares = ["simpleAuth", "securityHeaders"]
   service = "api@internal"
