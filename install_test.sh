@@ -381,12 +381,22 @@ if [ "$confirma1" == "y" ]; then
         fi
         echo -e "${GREEN}✅ Docker instalado com sucesso.${NC}"
     fi
+
+    echo -e "${YELLOW}📁 Criando diretórios e configurando...${NC}"
+    (sudo mkdir -p /docker/traefik) > /dev/null 2>&1 & spinner $!
+    wait $!
+    if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Erro ao criar diretórios. Verifique suas permissões.${NC}"
+        exit 1
+    fi
+    echo -e "${GREEN}✅ Diretórios criados com sucesso.${NC}"    
    
     ######################################
     ##### CRIANDO DOCKER-COMPOSE.YML #####
     ######################################
 
-    (sudo mkdir -p /docker/traefik && cd /docker) > /dev/null 2>&1 & spinner $!
+    # Entra no diretório /docker para criar os arquivos
+    cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat > docker-compose.yml <<EOL
@@ -454,7 +464,8 @@ EOL
  ##### CRIANDO TRAEFIK.TOML #####
  ################################
 
- (cd /docker/traefik) > /dev/null 2>&1 & spinner $!
+# Entra no diretório /docker para criar os arquivos
+    cd /docker/traefik || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker/traefik.${NC}"; exit 1; } 
     
    echo -e "${YELLOW}📝 Criando traefik.toml...${NC}"
     cat > traefik.toml <<EOL
