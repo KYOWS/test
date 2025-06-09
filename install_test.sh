@@ -282,9 +282,16 @@ show_step 4
 while true; do
     read -s -p "🔑 Senha do Traefik (mínimo 8 caracteres, com maiúscula, minúscula, número e especial): " traefik_senha
     echo "" # Quebra de linha após a entrada da senha oculta
-    if validate_password_complexity "$traefik_senha"; then              
-        echo -e "${GREEN}✅ Senha aceita.${NC}"
-        break
+    read -s -p "🔁 Confirme a Senha do Traefik: " traefik_senha_confirm
+    echo "" # Quebra de linha após a entrada da senha de confirmação oculta
+
+    if [[ "$traefik_senha" == "$traefik_senha_confirm" ]]; then
+        if validate_password_complexity "$traefik_senha"; then
+            echo -e "${GREEN}✅ Senha aceita.${NC}"
+            break
+        fi
+    else
+        echo -e "${RED}❌ As senhas não coincidem. Por favor, tente novamente.${NC}"
     fi
 done
 
