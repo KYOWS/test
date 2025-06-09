@@ -580,7 +580,8 @@ EOL
         exit 1
     fi
     echo -e "${GREEN}✅ Containers iniciados com sucesso.${NC}"
-
+    sleep 2
+    
     clear
     show_animated_logo
 
