@@ -404,8 +404,7 @@ services:
   traefik:
     image: traefik:latest
     container_name: traefik
-    restart: always
-    command: -H unix:///var/run/docker.sock
+    restart: always    
     networks:
       - web
     ports:
@@ -426,6 +425,7 @@ services:
     image: portainer/portainer-ce:latest
     container_name: portainer
     restart: always
+    command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /docker/portainer/data:/data
