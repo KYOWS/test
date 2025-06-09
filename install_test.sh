@@ -400,7 +400,7 @@ if [ "$confirma1" == "y" ]; then
     cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
-    cat > docker-compose.yml <<EOL
+    cat <<EOL | sudo tee docker-compose.yml > /dev/null
 services:  
   traefik:
     image: traefik:latest
@@ -469,7 +469,7 @@ EOL
     cd /docker/traefik || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker/traefik.${NC}"; exit 1; } 
     
    echo -e "${YELLOW}📝 Criando traefik.toml...${NC}"
-    cat > traefik.toml <<EOL
+    cat <<EOL | sudo tee traefik.toml > /dev/null
 [entryPoints]
   [entryPoints.web]
     address = ":80"
@@ -517,7 +517,7 @@ EOL
 ########################################
 
    echo -e "${YELLOW}📝 Criando traefik_dynamic.toml...${NC}"
-    cat > traefik_dynamic.toml <<EOL
+    cat <<EOL | sudo tee traefik_dynamic.toml > /dev/null
 [http.middlewares.simpleAuth.basicAuth]
   users = [
     "$encrypted_password"
@@ -558,7 +558,7 @@ EOL
     echo -e "${YELLOW}📝 Configurando permissões para acme.json...${NC}"
     
     if [ ! -f acme.json ]; then
-      touch acme.json && chmod 600 acme.json
+      sudo touch acme.json && chmod 600 acme.json
     fi
     
     echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
