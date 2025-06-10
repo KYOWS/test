@@ -379,9 +379,8 @@ if [ "$confirma1" == "y" ]; then
     if ! check_docker_installed; then
         echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
 
-        #### install_docker_function > /dev/null 2>&1 & spinner $!
-        (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
-        
+        install_docker_function > /dev/null 2>&1 & spinner $!
+               
         if [ $? -ne 0 ]; then
             echo -e "${RED}❌ Erro ao instalar o Docker. Por favor, verifique a saída do comando.${NC}"
             exit 1
@@ -579,8 +578,7 @@ EOL
     
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
     
-    #mudar (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!
-    (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
+    (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!    
     
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao iniciar os containers Docker. Verifique a saída de 'sudo docker compose up'.${NC}"
