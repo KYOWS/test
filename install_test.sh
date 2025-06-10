@@ -574,6 +574,11 @@ EOL
     ###############################
     
     # Entra no diretório /docker para criar os arquivos
+
+    cd || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
+
+    sudo docker network create web
+    
     cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
     
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
