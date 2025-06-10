@@ -2,7 +2,7 @@
 
     traefik_domain='TESTE.vom.com'
     
-    (sudo mkdir -p /dockerr ) > /dev/null 2>&1 & spinner $!
+    sudo mkdir -p /dockerr
     
     # Entra no diretório /docker para criar os arquivos
     cd /dockerr || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
