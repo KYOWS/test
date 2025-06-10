@@ -577,7 +577,7 @@ EOL
 
     cd || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
 
-    sudo docker network create web
+    (sudo docker network create web) > /dev/null 2>&1 & spinner $!  
     
     cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
     
