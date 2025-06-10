@@ -23,7 +23,7 @@
   [http.middlewares.redirect-www-to-main.redirectregex]
       permanent = true
       regex = "^https?://www\\.(.+)"
-      replacement = "https://$${1}"
+      replacement = "https://${1}"
 
 # NOVO: Definição do middleware de segurança de cabeçalhos HTTP
 [http.middlewares.securityHeaders.headers]
