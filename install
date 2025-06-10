@@ -1,76 +1,47 @@
 #!/bin/bash
 
-    edge_domain='TESTE'
+    traefik_domain='TESTE.vom.com'
     
     (sudo mkdir -p /dockerr ) > /dev/null 2>&1 & spinner $!
     
-   
-    ######################################
-    ##### CRIANDO DOCKER-COMPOSE.YML #####
-    ######################################
-
     # Entra no diretório /docker para criar os arquivos
     cd /dockerr || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
-    
-   echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
-    cat <<EOL | sudo tee docker-compose.yml > /dev/null
-services:  
-  traefik:
-    image: traefik:latest
-    container_name: traefik
-    restart: always    
-    networks:
-      - web
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - /etc/localtime:/etc/localtime
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /docker/traefik/traefik.toml:/traefik.toml
-      - /docker/traefik/traefik_dynamic.toml:/traefik_dynamic.toml
-      - /docker/traefik/acme.json:/acme.json
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
 
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    restart: always
-    command: -H unix:///var/run/docker.sock
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /docker/portainer/data:/data
-    ports:
-      - 8000:8000
-      - 9000:9000
-      - 9443:9443
-    networks:
-      - web
-    labels:
-      - "traefik.enable=true"
-    # Roteador e Serviço para a interface principal do Portainer (porta 9000)
-      - "traefik.http.routers.portainer.rule=Host(\`$portainer_domain\`)"
-      - "traefik.http.routers.portainer.tls=true"
-      - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
-      - "traefik.http.services.portainer-main.loadbalancer.server.port=9000" # Define um serviço Traefik chamado 'portainer-main'
-      - "traefik.http.routers.portainer.service=portainer-main" # O roteador 'portainer' usa o serviço 'portainer-main'
-    # Roteador e Serviço para o endpoint Edge do Portainer (porta 8000)
-      - "traefik.http.routers.edge.rule=Host(\`$edge_domain\`)"
-      - "traefik.http.routers.edge.entrypoints=websecure"
-      - "traefik.http.services.portainer-edge.loadbalancer.server.port=8000" # Define um serviço Traefik chamado 'portainer-edge'
-      - "traefik.http.routers.edge.service=portainer-edge" 
-      - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
-      - "traefik.docker.network=web"
-    logging:
-      options:
-        max-size: "10m"
-        max-file: "3"
+########################################
+##### CRIANDO TRAEFIK_DYNAMIC.TOML #####
+########################################
 
-networks:
-  web:
-    external: true
+   echo -e "${YELLOW}📝 Criando traefik_dynamic.toml...${NC}"
+    cat <<EOL | sudo tee traefik_dynamic.toml > /dev/null
+[http.middlewares.simpleAuth.basicAuth]
+  users = [
+    "$encrypted_password"
+  ]
+
+# Use with traefik.http.routers.myRouter.middlewares: "redirect-www-to-main@file"
+[http.middlewares]
+  [http.middlewares.redirect-www-to-main.redirectregex]
+      permanent = true
+      regex = "^https?://www\\.(.+)"
+      replacement = "https://$${1}"
+
+# NOVO: Definição do middleware de segurança de cabeçalhos HTTP
+[http.middlewares.securityHeaders.headers]
+  browserXssFilter = true
+  contentTypeNosniff = true
+  frameDeny = true
+  sslRedirect = true
+  # HSTS (Strict-Transport-Security) - Descomente se tiver certeza! Força o navegador a usar HTTPS para seu domínio por um período. Cuidado ao habilitar: se o HTTPS quebrar, seus usuários não conseguirão acessar por um tempo.
+  # strictTransportSecurity = true
+  # stsSeconds = 31536000 # 1 ano
+  # stsIncludeSubdomains = true  
+
+[http.routers.api]
+  rule = "Host(\`$traefik_domain\`)"
+  entrypoints = ["websecure"]
+  middlewares = ["simpleAuth", "securityHeaders"]
+  service = "api@internal"
+  [http.routers.api.tls]
+    certResolver = "lets-encrypt"
 EOL
-    echo -e "${GREEN}✅ docker-compose.yml criado com sucesso.${NC}"
+    echo -e "${GREEN}✅ traefik_dynamic.toml criado com sucesso.${NC}"
