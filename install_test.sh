@@ -577,17 +577,17 @@ EOL
 
     cd || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
 
-    f ! sudo docker network ls | grep -q "web"; then
-    echo -e "${YELLOW}🌐 Criando rede Docker web...${NC}"
+    if ! sudo docker network ls | grep -q "web"; then
+    echo -e "${YELLOW}🌐 Criando rede Docker 'web'...${NC}"
     (sudo docker network create web) > /dev/null 2>&1 & spinner $!
     if [ $? -ne 0 ]; then
-        echo -e "${RED}❌ Erro ao criar a rede Docker web.${NC}"
+        echo -e "${RED}❌ Erro ao criar a rede Docker 'web'.${NC}"
         exit 1
     fi
-    echo -e "${GREEN}✅ Rede Docker web criada com sucesso.${NC}"
+    echo -e "${GREEN}✅ Rede Docker 'web' criada com sucesso.${NC}"
     else
-    echo -e "${GREEN}✅ Rede Docker web já existe.${NC}"
-    fi  
+    echo -e "${GREEN}✅ Rede Docker 'web' já existe.${NC}"
+    fi
     
     cd /docker || { echo -e "${RED}❌ Não foi possível mudar para o diretório /docker.${NC}"; exit 1; }
     
