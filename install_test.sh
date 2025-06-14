@@ -545,9 +545,9 @@ EOL
   frameDeny = true
   sslRedirect = true
   # HSTS (Strict-Transport-Security) - Descomente se tiver certeza! Força o navegador a usar HTTPS para seu domínio por um período. Cuidado ao habilitar: se o HTTPS quebrar, seus usuários não conseguirão acessar por um tempo.
-  # strictTransportSecurity = true
-  # stsSeconds = 31536000 # 1 ano
-  # stsIncludeSubdomains = true  
+  strictTransportSecurity = true
+  stsSeconds = 31536000 # 1 ano
+  stsIncludeSubdomains = true  
 
 [http.routers.api]
   rule = "Host(\`$traefik_domain\`, \`www.$traefik_domain\`)"
