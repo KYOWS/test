@@ -48,6 +48,12 @@ spinner() {
 check_system_requirements() {
     echo -e "${BLUE}Verificando requisitos do sistema...${NC}"
 
+    # Verificar se é Ubuntu/Debian
+    if ! command -v apt-get &> /dev/null; then
+        echo -e "${RED}❌ Erro: Este script é para sistemas baseados em Debian/Ubuntu${NC}"
+        return 1
+    fi
+
     # Verificar espaço em disco (em GB, removendo a unidade 'G')
     local free_space=$(df -BG / | awk 'NR==2 {print $4}' | tr -d 'G')
     if [ "$free_space" -lt 15 ]; then
@@ -59,6 +65,12 @@ check_system_requirements() {
     local total_mem=$(free -g | awk 'NR==2 {print $2}')
     if [ "$total_mem" -lt 2 ]; then
         echo -e "${RED}❌ Erro: Memória RAM insuficiente. Mínimo requerido: 2GB. Disponível: ${total_mem}GB${NC}"
+        return 1
+    fi
+
+    # Verificar se tem privilégios de sudo
+    if ! sudo -n true 2>/dev/null; then
+        echo -e "${RED}❌ Erro: É necessário ter privilégios de sudo${NC}"
         return 1
     fi
 
