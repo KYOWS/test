@@ -22,12 +22,6 @@
 [http.middlewares]
   [http.middlewares.redirect-www-to-main.redirectregex]
       permanent = true
-      regex = "^https?://www\\.(.+)"
-      replacement = "https://${1}"
-
-[http.middlewares]
-  [http.middlewares.redirect-www-to-main.redirectregex]
-      permanent = true
       regex = "^https?://www\\\\.(.+)"
       replacement = "https://\${1}"
 
@@ -38,14 +32,14 @@
   frameDeny = true
   sslRedirect = true
   # HSTS (Strict-Transport-Security) - Descomente se tiver certeza! Força o navegador a usar HTTPS para seu domínio por um período. Cuidado ao habilitar: se o HTTPS quebrar, seus usuários não conseguirão acessar por um tempo.
-  # strictTransportSecurity = true
-  # stsSeconds = 31536000 # 1 ano
-  # stsIncludeSubdomains = true  
+  strictTransportSecurity = true
+  stsSeconds = 31536000 # 1 ano
+  stsIncludeSubdomains = true  
 
 [http.routers.api]
-  rule = "Host(\`$traefik_domain\`)"
+  rule = "Host(\`$traefik_domain\`, \`www.$traefik_domain\`)"
   entrypoints = ["websecure"]
-  middlewares = ["simpleAuth", "securityHeaders"]
+  middlewares = ["simpleAuth", "securityHeaders", "redirect-www-to-main@file"]
   service = "api@internal"
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
