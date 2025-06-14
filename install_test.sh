@@ -412,7 +412,7 @@ services:
   traefik:
     image: traefik:latest
     container_name: traefik
-    restart: always    
+    restart: unless-stopped 
     networks:
       - web
     ports:
@@ -437,7 +437,7 @@ services:
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
-    restart: always
+    restart: unless-stopped
     command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -521,15 +521,18 @@ EOL
 [certificatesResolvers.lets-encrypt.acme]
   email = "$email"
   storage = "acme.json"
+  keyType = "EC256"
   [certificatesResolvers.lets-encrypt.acme.tlsChallenge]
 
 [providers.docker]
   watch = true
   network = "web"
   exposedByDefault = false
+  endpoint = "unix:///var/run/docker.sock"
 
 [providers.file]
   filename = "traefik_dynamic.toml"
+  watch = true
 EOL
     echo -e "${GREEN}✅ traefik.toml criado com sucesso.${NC}"
     
