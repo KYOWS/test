@@ -406,6 +406,8 @@ if [ "$confirma1" == "y" ]; then
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat <<EOL | sudo tee docker-compose.yml > /dev/null
+version: '3.8'
+    
 services:  
   traefik:
     image: traefik:latest
@@ -426,6 +428,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    healthcheck:
+      test: ["CMD", "traefik", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -462,6 +469,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/api/status || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 networks:
   web:
@@ -487,6 +499,7 @@ EOL
         [entryPoints.web.http.redirections.entryPoint]
           to = "websecure"
           scheme = "https"
+          permanent = true
 
   [entryPoints.websecure]
     address = ":443"   
@@ -553,10 +566,14 @@ EOL
   stsSeconds = 31536000 # 1 ano
   stsIncludeSubdomains = true  
 
+[http.middlewares.rateLimitMiddleware.rateLimit]
+  burst = 100
+  average = 50
+
 [http.routers.api]
   rule = "Host(\`$traefik_domain\`) || Host(\`www.$traefik_domain\`)"
   entrypoints = ["websecure"]
-  middlewares = ["simpleAuth", "securityHeaders", "redirect-www-to-main@file"]
+  middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main@file"]
   service = "api@internal"
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
