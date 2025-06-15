@@ -538,12 +538,12 @@ EOL
     address = ":443"   
 
 [log]
-  level = "WARN"
-  #level = "INFO"
-  #filePath = "/var/log/traefik.log"
+  #level = "WARN"
+  level = "INFO"
+  filePath = "/var/log/traefik.log"
 
 [accessLog]
-  #filePath = "/var/log/access.log"
+  filePath = "/var/log/access.log"
 
 [metrics]
   [metrics.prometheus]
@@ -565,7 +565,7 @@ EOL
   watch = true
   network = "web"
   exposedByDefault = false
-  endpoint = "unix:///var/run/docker.sock"
+  #endpoint = "unix:///var/run/docker.sock"
 
 [providers.file]
   filename = "traefik_dynamic.toml"
