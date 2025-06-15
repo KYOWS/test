@@ -16,6 +16,7 @@ check_apache2_utils() {
         echo -e "${YELLOW}Instalando apache2-utils...${NC}"
 
         (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
+        wait $!
                 
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
@@ -178,7 +179,7 @@ validate_email() {
 
 validate_domain() {    
     local domain_regex="^[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
-    if [[ "$1" =~ $domain_regex ]]; then
+    if [[ "$1" =~ $domain_regex ]] && [[ ${#1} -le 253 ]]; then
         return 0 # Válido
     else
         return 1 # Inválido
@@ -355,7 +356,7 @@ echo -e "${GREEN}================================${NC}"
 echo ""
 
 read -p "As informações estão certas? (y/n): " confirma1
-if [ "$confirma1" == "y" ]; then
+if [[ "$confirma1" =~ ^[Yy]$ ]]; then
     clear
 
     ###########################################
@@ -373,6 +374,7 @@ if [ "$confirma1" == "y" ]; then
     echo -e "${YELLOW}📦 Atualizando sistema e instalando dependências...${NC}"
     
     (sudo apt-get update -y && sudo apt-get upgrade -y) > /dev/null 2>&1 & spinner $!
+    wait $!
     
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao atualizar o sistema e instalar dependências. Verifique sua conexão ou permissões.${NC}"
@@ -392,6 +394,7 @@ if [ "$confirma1" == "y" ]; then
         echo -e "${YELLOW}🐳 Instalando Docker...${NC}"
 
         install_docker_function > /dev/null 2>&1 & spinner $!
+        wait $!
                
         if [ $? -ne 0 ]; then
             echo -e "${RED}❌ Erro ao instalar o Docker. Por favor, verifique a saída do comando.${NC}"
@@ -604,6 +607,7 @@ EOL
     
     if [ ! -f acme.json ]; then
       (sudo touch acme.json && sudo chmod 600 acme.json) > /dev/null 2>&1 & spinner $! 
+      wait $!
     fi
     
     echo -e "${GREEN}✅ Permissões para acme.json configuradas.${NC}"
@@ -619,6 +623,7 @@ EOL
     if ! sudo docker network ls | grep -q "web"; then
     echo -e "${YELLOW}🌐 Criando rede Docker 'web'...${NC}"
     (sudo docker network create web) > /dev/null 2>&1 & spinner $!
+    wait $!
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao criar a rede Docker 'web'.${NC}"
         exit 1
@@ -632,7 +637,8 @@ EOL
     
     echo -e "${YELLOW}🚀 Iniciando containers Docker...${NC}"    
     
-    (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!    
+    (sudo docker compose up -d) > /dev/null 2>&1 & spinner $!
+    wait $!
     
     if [ $? -ne 0 ]; then
         echo -e "${RED}❌ Erro ao iniciar os containers Docker. Verifique a saída de 'sudo docker compose up'.${NC}"
