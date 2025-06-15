@@ -528,12 +528,12 @@ EOL
     address = ":443"   
 
 [log]
-  level = "WARN"
-  #level = "INFO"
-  #filePath = "/var/log/traefik.log"
+  #level = "WARN"
+  level = "INFO"
+  filePath = "/var/log/traefik.log"
 
 [accessLog]
-  #filePath = "/var/log/access.log"
+  filePath = "/var/log/access.log"
 
 [metrics]
   [metrics.prometheus]
@@ -603,7 +603,8 @@ EOL
 [http.routers.api]
   rule = "Host(\`$traefik_domain\`) || Host(\`www.$traefik_domain\`)"
   entrypoints = ["websecure"]
-  middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main"]
+  # middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main"]
+  middlewares = ["simpleAuth", "securityHeaders", "redirect-www-to-main"]
   service = "api@internal"
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
