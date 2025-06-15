@@ -572,8 +572,8 @@ EOL
   contentTypeNosniff = true
   frameDeny = true
   sslRedirect = true
-  referrerPolicy = "strict-origin-when-cross-origin"
-  contentSecurityPolicy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+  referrerPolicy = "strict-origin-when-cross-origin"  
+  contentSecurityPolicy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'"
   # HSTS (Strict-Transport-Security) - Descomente se tiver certeza! Força o navegador a usar HTTPS para seu domínio por um período. Cuidado ao habilitar: se o HTTPS quebrar, seus usuários não conseguirão acessar por um tempo.
   # strictTransportSecurity = true
   forceSTSHeader = true
