@@ -194,7 +194,7 @@ validate_domain() {
 #######################################
 
 validate_user() {    
-    local domain_regex="^[a-zA-Z0-9]{4,}$"
+    local domain_regex="^[a-zA-Z0-9_]{4,}$"
     if [[ "$1" =~ $domain_regex ]]; then
         return 0 # Válido
     else
@@ -284,7 +284,7 @@ while true; do
         echo -e "${GREEN}✅ Usuário válido.${NC}"
         break
     else
-        echo -e "${RED}❌ Usuário inválido. Por favor, insira um usuário válido. Mínimo de 4 caracteres.${NC}"
+        echo -e "${RED}❌ Usuário inválido. Use apenas letras, números e underscore. Mínimo de 4 caracteres.${NC}"
     fi
 done
 
