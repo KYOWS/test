@@ -489,14 +489,14 @@ services:
       - "traefik.http.routers.portainer.tls.certresolver=lets-encrypt"
       - "traefik.http.services.portainer-main.loadbalancer.server.port=9000" # Define um serviço Traefik chamado 'portainer-main'
       - "traefik.http.routers.portainer.service=portainer-main" # O roteador 'portainer' usa o serviço 'portainer-main'
-      - "traefik.http.routers.portainer.middlewares=redirect-www-to-main@file" # Adicionado o middleware para redirecionamento
+      - "traefik.http.routers.portainer.middlewares=redirect-www-to-main@file,securityHeaders@file,rateLimitMiddleware@file" # Adicionado o middleware para redirecionamento
     # Roteador e Serviço para o endpoint Edge do Portainer (porta 8000)
       - "traefik.http.routers.edge.rule=Host(\`$edge_domain\`) || Host(\`www.$edge_domain\`)"
       - "traefik.http.routers.edge.entrypoints=websecure"
       - "traefik.http.services.portainer-edge.loadbalancer.server.port=8000" # Define um serviço Traefik chamado 'portainer-edge'
       - "traefik.http.routers.edge.service=portainer-edge" 
       - "traefik.http.routers.edge.tls.certresolver=lets-encrypt"
-      - "traefik.http.routers.edge.middlewares=redirect-www-to-main@file" # Adicionado o middleware para redirecionamento
+      - "traefik.http.routers.edge.middlewares=redirect-www-to-main@file,securityHeaders@file,rateLimitMiddleware@file" # Adicionado o middleware para redirecionamento
       - "traefik.docker.network=web"
     logging:
       options:
@@ -538,11 +538,12 @@ EOL
     address = ":443"   
 
 [log]
-  level = "INFO"
-  filePath = "/var/log/traefik.log"
+  level = "WARN"
+  #level = "INFO"
+  #filePath = "/var/log/traefik.log"
 
 [accessLog]
-  filePath = "/var/log/access.log"
+  #filePath = "/var/log/access.log"
 
 [metrics]
   [metrics.prometheus]
