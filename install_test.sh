@@ -441,8 +441,6 @@ if [[ "$confirma1" =~ ^[Yy]$ ]]; then
     
    echo -e "${YELLOW}📝 Criando docker-compose.yml...${NC}"
     cat <<EOL | sudo tee docker-compose.yml > /dev/null
-version: '3.8'
-    
 services:  
   traefik:
     image: traefik:latest
