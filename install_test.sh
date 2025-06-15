@@ -565,7 +565,7 @@ EOL
   watch = true
   network = "web"
   exposedByDefault = false
-  #endpoint = "unix:///var/run/docker.sock"
+  endpoint = "unix:///var/run/docker.sock"
 
 [providers.file]
   filename = "traefik_dynamic.toml"
