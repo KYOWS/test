@@ -603,8 +603,7 @@ EOL
 [http.routers.api]
   rule = "Host(\`$traefik_domain\`) || Host(\`www.$traefik_domain\`)"
   entrypoints = ["websecure"]
-  # middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main"]
-  middlewares = ["simpleAuth", "securityHeaders", "redirect-www-to-main"]
+  middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main"]  
   service = "api@internal"
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
