@@ -17,7 +17,10 @@ check_apache2_utils() {
 
         (sudo apt-get update -y && sudo apt-get install apache2-utils -y) > /dev/null 2>&1 & spinner $!
         wait $!
-                
+        if [ $? -ne 0 ]; then
+        echo -e "${RED}❌ Erro ao instalar apache2-utils. Verifique sua conexão ou permissões.${NC}"
+        return 1 # Adicionado para indicar falha
+        fi        
         echo -e "${GREEN}✅ apache2-utils instalado com sucesso!${NC}"
     else
         echo -e "${GREEN}✅ apache2-utils já está instalado.${NC}"
