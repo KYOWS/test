@@ -529,6 +529,7 @@ EOL
 
 [api]
   dashboard = true
+  debug = false
 
 [certificatesResolvers.lets-encrypt.acme]
   email = "$email"
