@@ -125,6 +125,7 @@ install_docker_function() {
     sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin && \
     # Adicionar usuário atual ao grupo docker
     sudo usermod -aG docker $USER && \
+    newgrp docker && \
     # Iniciar e habilitar Docker
     sudo systemctl start docker && \
     sudo systemctl enable docker
@@ -613,7 +614,7 @@ EOL
 [http.routers.api]
   rule = "Host(\`$traefik_domain\`) || Host(\`www.$traefik_domain\`)"
   entrypoints = ["websecure"]
-  middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main@file"]
+  middlewares = ["simpleAuth", "securityHeaders", "rateLimitMiddleware", "redirect-www-to-main"]
   service = "api@internal"
   [http.routers.api.tls]
     certResolver = "lets-encrypt"
