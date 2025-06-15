@@ -460,12 +460,7 @@ services:
     logging:
       options:
         max-size: "10m"
-        max-file: "3"
-    #healthcheck:
-    #  test: ["CMD", "traefik", "healthcheck"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3
+        max-file: "3"    
 
   portainer:
     image: portainer/portainer-ce:latest
@@ -501,12 +496,7 @@ services:
     logging:
       options:
         max-size: "10m"
-        max-file: "3"
-    #healthcheck:
-    #  test: ["CMD-SHELL", "curl -f http://localhost:9000/api/status || exit 1"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3
+        max-file: "3"   
 
 networks:
   web:
