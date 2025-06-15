@@ -194,7 +194,7 @@ validate_email() {
 #################################################################################
 
 validate_domain() {    
-    local domain_regex="^[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})(\.[a-zA-Z]{2,})$"
+    local domain_regex="^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$"
     if [[ "$1" =~ $domain_regex ]] && [[ ${#1} -le 253 ]]; then
         return 0 # Válido
     else
